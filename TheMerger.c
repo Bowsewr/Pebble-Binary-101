@@ -1,6 +1,9 @@
 #include <pebble.h>
 #include <pebble_fonts.h>
 
+#define GColorDukeBlueARGB8 ((uint8_t)0b11000010)
+#define JoLeeSucksBlue (GColor8){ .argb = 0b11000010}
+
 #define CIRCLE_RADIUS 16
 #define CIRCLE_LINE_THICKNESS 2
 #define CIRCLE_PADDING 12 - CIRCLE_RADIUS
@@ -33,7 +36,7 @@ bool connectionStatus = false;
 
 
 static void draw_cell(GContext *ctx, GPoint center, bool filled) {
-  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_context_set_fill_color(ctx, JoLeeSucksBlue);
     graphics_fill_rect(ctx, GRect(center.x, center.y, CIRCLE_RADIUS, CIRCLE_RADIUS), 2, GCornersAll);
 
   if (!filled) {
