@@ -7,7 +7,7 @@
 #define CELL_SIZE (2 * (CIRCLE_RADIUS + CIRCLE_PADDING))
 //#define SIDE_PADDING (144 - (6 * CELL_SIZE)) / 2
 #define SIDE_PADDING (144 - (5.5 * CELL_SIZE)) / 2
-#define TOP_PADDING -5
+#define TOP_PADDING 10
 #define CELLS_PER_ROW 4
 #define CELLS_PER_COLUMN 6
 
@@ -73,6 +73,9 @@ static void display_layer_update_callback(Layer *layer, GContext *ctx) {
   draw_cell_row_for_digit(ctx, t->tm_min / 10, MINUTES_FIRST_DIGIT_MAX_COLS, MINUTES_FIRST_DIGIT_ROW);
   draw_cell_row_for_digit(ctx, t->tm_min % 10, DEFAULT_MAX_COLS, MINUTES_SECOND_DIGIT_ROW);
 
+  graphics_draw_text(ctx, seconds_singles_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(50, 90, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+  graphics_draw_text(ctx, seconds_tens_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(50, 60, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+  
 //  -----------------------------------------------
 /*  
   //date stuff maybe
@@ -85,7 +88,10 @@ static void display_layer_update_callback(Layer *layer, GContext *ctx) {
   
   snprintf(seconds_singles_buffer, sizeof(seconds_singles_buffer), "%d", secondsplace);
   snprintf(seconds_tens_buffer, sizeof(seconds_tens_buffer), "%d", tensplace);  
+
 }
+
+
 
 //---------------------------------------
   
