@@ -65,9 +65,14 @@ static unsigned short get_display_hour(unsigned short hour) {
   return display_hour ? display_hour : 12;
 }
 
-  static char seconds_singles_buffer[30]; 
-  static char seconds_tens_buffer[30];
-static void display_layer_update_callback(Layer *layer, GContext *ctx) {
+char* days_of_week[7] = {"Sun,", "Mon,", "Tues,", "Wed,", "Thu,", "Fri,", "Sat,"};
+char* months_of_year[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+static char seconds_singles_buffer[30]; 
+static char seconds_tens_buffer[30];
+
+void oldUpdate(Layer *layer, GContext *ctx) {
+  
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
 
@@ -82,35 +87,18 @@ static void display_layer_update_callback(Layer *layer, GContext *ctx) {
   graphics_draw_text(ctx, seconds_singles_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(50, 90, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
   graphics_draw_text(ctx, seconds_tens_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(50, 60, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 
-int secondsplace = t->tm_sec % 10;
+  int secondsplace = t->tm_sec % 10;
   int tensplace = t->tm_sec / 10;
   
   snprintf(seconds_singles_buffer, sizeof(seconds_singles_buffer), "%d", secondsplace);
   snprintf(seconds_tens_buffer, sizeof(seconds_tens_buffer), "%d", tensplace);  
 
+
+  
 }
-
-
-
-static void main_window_load(Window *window) {
-  Layer *window_layer = window_get_root_layer(window);
-  GRect bounds = layer_get_frame(window_layer);
-
-  s_display_layer = layer_create(bounds);
-  layer_set_update_proc(s_display_layer, display_layer_update_callback);
-  layer_add_child(window_layer, s_display_layer);
-
-  tick_timer_service_subscribe(SECOND_UNIT, handle_second_tick);
-}
-
-
-
-
-char* days_of_week[7] = {"Sun,", "Mon,", "Tues,", "Wed,", "Thu,", "Fri,", "Sat,"};
-char* months_of_year[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
 void update_proc(Layer *layer, GContext *ctx) {
 
+  oldUpdate(layer, ctx);
     time_t time_value = time(NULL);
     struct tm* mTime = localtime(&time_value);
     
@@ -200,6 +188,7 @@ void bluetooth_state_handler(bool connected)
 }
 
 static void window_load(Window *window) {
+  
     Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
 
@@ -258,24 +247,6 @@ static void window_unload(Window *window) {
 }
 
 //----------------------jif binary
-
-static void main_window_unload(Window *window) {
-  layer_destroy(s_display_layer);
-}
-
-static void init() {
-  s_main_window = window_create();
-  window_set_background_color(s_main_window, GColorBlack);
-  window_set_window_handlers(s_main_window, (WindowHandlers) {
-    .load = main_window_load,
-    .unload = main_window_unload,
-  });
-  window_stack_push(s_main_window, true);
-}
-
-static void deinit() {
-  window_destroy(s_main_window);
-}
 
 
 //---------------------imported code
