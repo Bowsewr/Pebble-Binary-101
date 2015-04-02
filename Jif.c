@@ -59,6 +59,8 @@ static unsigned short get_display_hour(unsigned short hour) {
   return display_hour ? display_hour : 12;
 }
 
+  static char seconds_singles_buffer[30]; 
+  static char seconds_tens_buffer[30];
 static void display_layer_update_callback(Layer *layer, GContext *ctx) {
   time_t now = time(NULL);
   struct tm *t = localtime(&now);
@@ -70,7 +72,7 @@ static void display_layer_update_callback(Layer *layer, GContext *ctx) {
 
   draw_cell_row_for_digit(ctx, t->tm_min / 10, MINUTES_FIRST_DIGIT_MAX_COLS, MINUTES_FIRST_DIGIT_ROW);
   draw_cell_row_for_digit(ctx, t->tm_min % 10, DEFAULT_MAX_COLS, MINUTES_SECOND_DIGIT_ROW);
-}
+
 //  -----------------------------------------------
 /*  
   //date stuff maybe
@@ -78,8 +80,6 @@ static void display_layer_update_callback(Layer *layer, GContext *ctx) {
   strftime(date_text, sizeof(date_text), "%a %b %e", t);
   graphics_draw_text(ctx, date_text, fonts_get_system_font(FONT_KEY_GOTHIC_28), GRect(0, 113, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 */  
-  static char seconds_singles_buffer[30]; 
-  static char seconds_tens_buffer[30];
   int secondsplace = t->tm_sec % 10;
   int tensplace = t->tm_sec / 10;
   
