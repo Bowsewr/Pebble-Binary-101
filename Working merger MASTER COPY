@@ -1,12 +1,22 @@
 #include <pebble.h>
 #include <pebble_fonts.h>
 
-#define CIRCLE_RADIUS 16
+//#define GColorDukeBlueARGB8 ((uint8_t)0b11000010)
+//#define JoLeeSucksBlue (GColor8){ .argb = 0b11000010}
+
+#define GColorBlueARGB8 ((uint8_t)0b11000011)
+#define JoLeeSucksBlue (GColor8){ .argb = 0b11000011}  
+
+
+
+  
+  
+#define CIRCLE_RADIUS 19    //16 default
 #define CIRCLE_LINE_THICKNESS 2
-#define CIRCLE_PADDING 12 - CIRCLE_RADIUS
+#define CIRCLE_PADDING 13.5 - CIRCLE_RADIUS    //12
 #define CELL_SIZE (2 * (CIRCLE_RADIUS + CIRCLE_PADDING))
 #define SIDE_PADDING (144 - (5.5 * CELL_SIZE)) / 2
-#define TOP_PADDING 10
+#define TOP_PADDING 4
 #define CELLS_PER_ROW 4
 #define CELLS_PER_COLUMN 6
 #define HOURS_FIRST_DIGIT_ROW 0
@@ -33,10 +43,16 @@ bool connectionStatus = false;
 
 
 static void draw_cell(GContext *ctx, GPoint center, bool filled) {
-  graphics_context_set_fill_color(ctx, GColorWhite);
+   graphics_context_set_fill_color(ctx, GColorWhite);
     graphics_fill_rect(ctx, GRect(center.x, center.y, CIRCLE_RADIUS, CIRCLE_RADIUS), 2, GCornersAll);
+  
+  graphics_context_set_fill_color(ctx, JoLeeSucksBlue);
+    graphics_fill_rect(ctx, GRect(center.x+CIRCLE_LINE_THICKNESS,  center.y+CIRCLE_LINE_THICKNESS, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2), 2, GCornersAll);
 
   if (!filled) {
+    graphics_context_set_fill_color(ctx, GColorWhite);
+    graphics_fill_rect(ctx, GRect(center.x, center.y, CIRCLE_RADIUS, CIRCLE_RADIUS), 2, GCornersAll);
+    
     graphics_context_set_fill_color(ctx, GColorBlack);
     graphics_fill_rect(ctx, GRect(center.x+CIRCLE_LINE_THICKNESS,  center.y+CIRCLE_LINE_THICKNESS, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2), 2, GCornersAll);
   }
@@ -84,8 +100,8 @@ void oldUpdate(Layer *layer, GContext *ctx) {
   draw_cell_row_for_digit(ctx, t->tm_min / 10, MINUTES_FIRST_DIGIT_MAX_COLS, MINUTES_FIRST_DIGIT_ROW);
   draw_cell_row_for_digit(ctx, t->tm_min % 10, DEFAULT_MAX_COLS, MINUTES_SECOND_DIGIT_ROW);
 
-  graphics_draw_text(ctx, seconds_singles_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(50, 90, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
-  graphics_draw_text(ctx, seconds_tens_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(50, 60, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+  graphics_draw_text(ctx, seconds_singles_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(55, 90, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+  graphics_draw_text(ctx, seconds_tens_buffer, fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS), GRect(55, 60, 144, 20), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 
   int secondsplace = t->tm_sec % 10;
   int tensplace = t->tm_sec / 10;
