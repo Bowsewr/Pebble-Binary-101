@@ -42,6 +42,11 @@ static BitmapLayer *phone_layer;
 bool connectionStatus = false;
 
 
+
+#ifdef PBL_COLOR
+
+  
+  
 static void draw_cell(GContext *ctx, GPoint center, bool filled) {
    graphics_context_set_fill_color(ctx, GColorWhite);
     graphics_fill_rect(ctx, GRect(center.x, center.y, CIRCLE_RADIUS, CIRCLE_RADIUS), 2, GCornersAll);
@@ -58,6 +63,27 @@ static void draw_cell(GContext *ctx, GPoint center, bool filled) {
   }
 }
 
+#else
+  
+static void draw_cell(GContext *ctx, GPoint center, bool filled) {
+   graphics_context_set_fill_color(ctx, GColorWhite);
+    graphics_fill_rect(ctx, GRect(center.x, center.y, CIRCLE_RADIUS, CIRCLE_RADIUS), 2, GCornersAll);
+  
+  graphics_context_set_fill_color(ctx, GColorWhite);
+    graphics_fill_rect(ctx, GRect(center.x+CIRCLE_LINE_THICKNESS,  center.y+CIRCLE_LINE_THICKNESS, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2), 2, GCornersAll);
+
+  if (!filled) {
+    graphics_context_set_fill_color(ctx, GColorWhite);
+    graphics_fill_rect(ctx, GRect(center.x, center.y, CIRCLE_RADIUS, CIRCLE_RADIUS), 2, GCornersAll);
+    
+    graphics_context_set_fill_color(ctx, GColorBlack);
+    graphics_fill_rect(ctx, GRect(center.x+CIRCLE_LINE_THICKNESS,  center.y+CIRCLE_LINE_THICKNESS, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2, CIRCLE_RADIUS-CIRCLE_LINE_THICKNESS*2), 2, GCornersAll);
+  }
+}
+
+#endif
+  
+
 static GPoint get_center_point_from_cell_location(unsigned short x, unsigned short y) {
   return GPoint(SIDE_PADDING + (CELL_SIZE / 2) + (CELL_SIZE * y), (CELL_SIZE / 2) + (CELL_SIZE * (4-x) + TOP_PADDING));
 }
@@ -71,15 +97,22 @@ static void draw_cell_row_for_digit(GContext *ctx, unsigned short digit, unsigne
   }
 }
 
+
+
+
+
 static unsigned short get_display_hour(unsigned short hour) {
   if (clock_is_24h_style()) {
     return hour;
   }
 
-  unsigned short display_hour = hour % 12;
+  unsigned short display_hour = hour % 24;
 
-  return display_hour ? display_hour : 12;
+  return display_hour ? display_hour : 24;
 }
+
+
+
 
 char* days_of_week[7] = {"Sun,", "Mon,", "Tues,", "Wed,", "Thu,", "Fri,", "Sat,"};
 char* months_of_year[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
